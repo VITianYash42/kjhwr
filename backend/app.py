@@ -13,6 +13,7 @@ DATA_FILE = os.path.join(os.path.dirname(__file__), "data.json")
 
 actuals = []
 forecasts = []
+by_time = {}
 
 
 def parse(t):
@@ -41,7 +42,7 @@ def fetch_all():
 
 
 def load():
-    global actuals, forecasts
+    global actuals, forecasts, by_time
     if actuals:
         return
     if os.path.exists(DATA_FILE):
@@ -52,17 +53,20 @@ def load():
         json.dump({"actuals": a, "forecasts": f}, open(DATA_FILE, "w"))
     actuals = [x for x in a if x["fuelType"] == "WIND"]
     forecasts = f
+    for x in f:
+        key = parse(x["startTime"])
+        if key not in by_time:
+            by_time[key] = []
+        by_time[key].append((parse(x["publishTime"]), x["generation"]))
 
 
 def latest_forecast(target, horizon):
     best = None
-    for x in forecasts:
-        if parse(x["startTime"]) != target:
-            continue
-        pub = parse(x["publishTime"])
-        if pub <= target - timedelta(hours=horizon):
+    cutoff = target - timedelta(hours=horizon)
+    for pub, gen in by_time.get(target, []):
+        if pub <= cutoff:
             if best is None or pub > best[0]:
-                best = (pub, x["generation"])
+                best = (pub, gen)
     return best
 
 
