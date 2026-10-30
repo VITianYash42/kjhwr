@@ -83,7 +83,8 @@ def build_rows(start, end, horizon):
             "forecast": fc[1] if fc else None,
             "publishTime": fc[0].isoformat() if fc else None
         })
-    return rows
+        rows.sort(key=lambda r: r["time"])
+        return rows
 
 
 def get_stats(rows):
