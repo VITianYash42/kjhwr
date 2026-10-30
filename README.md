@@ -18,8 +18,8 @@ Frontend: cd frontend, npm install, npm run dev
 For each half-hour target, the forecast used is the latest one published at least `horizon` hours before the target. Default horizon is 24h.
 
 ## Live app
-- Frontend: PASTE_FRONTEND_URL
-- Backend: PASTE_BACKEND_URL
+- Frontend: https://kjhwr-1nto-blush.vercel.app
+- Backend: https://kjhwr-green.vercel.app
 
 ## AI tools used
 Claude was used to assist with writing the code.
